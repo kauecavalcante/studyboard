@@ -125,6 +125,22 @@ describe('grupos e conversas', () => {
     assert.equal(res.status, 403);
   });
 
+  it('avisa em tempo real quem foi removido e os demais membros', async () => {
+    const info = await t.request('GET', `/groups/${group.id}`, { token: ana.token });
+    await t.request('POST', '/groups/join', { token: carla.token, body: { code: info.data.group.inviteCode } });
+    const removed = await t.socketFor(carla.token);
+    const other = await t.socketFor(bruno.token);
+    await new Promise((r) => setTimeout(r, 100));
+    const removedNotice = new Promise((resolve) => removed.on('groups:changed', resolve));
+    const membersNotice = new Promise((resolve) => other.on('group:members', resolve));
+
+    await t.request('DELETE', `/groups/${group.id}/members/${carla.id}`, { token: ana.token });
+    await removedNotice;
+    assert.equal((await membersNotice).groupId, group.id);
+    removed.close();
+    other.close();
+  });
+
   it('apenas o administrador remove membros', async () => {
     const res = await t.request('DELETE', `/groups/${group.id}/members/${ana.id}`, { token: bruno.token });
     assert.equal(res.status, 403);

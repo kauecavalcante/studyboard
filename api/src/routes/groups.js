@@ -4,6 +4,7 @@ import { getDb } from '../db.js';
 import { HttpError, toId } from '../errors.js';
 import { requireAuth } from '../auth.js';
 import { subscribeUser, unsubscribeUser } from '../realtime.js';
+import { rooms } from '../rooms.js';
 
 const router = Router();
 router.use(requireAuth);
@@ -50,6 +51,8 @@ async function addMember(io, group, userId) {
     { $push: { participants: { userId, role: 'member', joinedAt } } },
   );
   subscribeUser(io, userId, { conversationId: group.conversationId, groupId: group._id });
+  io.to(rooms.user(userId)).emit('groups:changed');
+  io.to(rooms.group(group._id)).emit('group:members', { groupId: String(group._id) });
 }
 
 router.post('/', async (req, res) => {
@@ -154,7 +157,10 @@ router.delete('/:id/members/:userId', async (req, res) => {
   await db
     .collection('conversations')
     .updateOne({ _id: group.conversationId }, { $pull: { participants: { userId: target } } });
-  unsubscribeUser(req.app.get('io'), target, { conversationId: group.conversationId, groupId: group._id });
+  const io = req.app.get('io');
+  unsubscribeUser(io, target, { conversationId: group.conversationId, groupId: group._id });
+  io.to(rooms.user(target)).emit('groups:changed');
+  io.to(rooms.group(group._id)).emit('group:members', { groupId: String(group._id) });
   res.json({ ok: true });
 });
 
