@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, session, setUnauthorizedHandler } from './api.js';
-import { connectSocket, disconnectSocket } from './socket.js';
+import { connectSocket, disconnectSocket, getSocket } from './socket.js';
 import AuthForm from './components/AuthForm.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import GroupView from './components/GroupView.jsx';
@@ -50,6 +50,21 @@ export default function App() {
     refresh().then((list) => {
       setSelected((current) => current ?? (list[0] ? { type: 'group', groupId: list[0].id } : null));
     });
+  }, [user, refresh]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    if (!user || !socket) return undefined;
+    const onGroupsChanged = async () => {
+      const list = await refresh();
+      setSelected((current) =>
+        current?.type === 'group' && !list.some((g) => g.id === current.groupId)
+          ? (list[0] ? { type: 'group', groupId: list[0].id } : null)
+          : current,
+      );
+    };
+    socket.on('groups:changed', onGroupsChanged);
+    return () => socket.off('groups:changed', onGroupsChanged);
   }, [user, refresh]);
 
   function authenticated(token, profile) {

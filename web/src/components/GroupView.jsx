@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api.js';
+import { getSocket } from '../socket.js';
 import Chat from './Chat.jsx';
 import Board from './Board.jsx';
 import Members from './Members.jsx';
@@ -25,6 +26,17 @@ export default function GroupView({ groupId, me, onOpenDirect, onGroupsChanged }
     setTab('chat');
     load();
   }, [load]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    const handler = (event) => {
+      if (event.groupId !== groupId) return;
+      load();
+      onGroupsChanged();
+    };
+    socket?.on('group:members', handler);
+    return () => socket?.off('group:members', handler);
+  }, [groupId, load, onGroupsChanged]);
 
   const changed = async () => {
     await load();
