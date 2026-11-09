@@ -4,7 +4,7 @@ Plataforma de **chat + organização de tarefas** para grupos de estudo.
 
 ## 📄 Documentação
 - 👉 [**PRD — Product Requirements Document**](docs/PRD.md)
-- 📋 GitHub Project (acompanhamento): _colar o link do Project aqui_
+- 📋 GitHub Project (acompanhamento): [GitHub Project](https://github.com/users/kauecavalcante/projects/5)
 
 ## Resumo
 - Chat em grupo e conversa direta em tempo real, com histórico persistido em **MongoDB (NoSQL)**
