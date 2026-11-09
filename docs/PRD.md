@@ -186,7 +186,7 @@ Projeto individual.
 - **Backend:** Node.js + Express + Socket.IO (tempo real)
 - **Banco de dados:** MongoDB (Atlas para produção, local para desenvolvimento)
 - **Autenticação:** JWT + bcrypt
-- **Deploy:** Render/Railway (API) e Vercel (front) — ou execução local via Docker Compose
+- **Execução:** local via Docker Compose (MongoDB, API e front sobem com um único comando; instruções no README)
 - **Versionamento e gestão:** GitHub + GitHub Projects
 
 ### 4.3 Backlog priorizado
@@ -217,7 +217,7 @@ Projeto individual.
 | 3. Núcleo do chat | 11/11 – 13/11 | Grupos, mensagens, tempo real, histórico |
 | 4. Organização | 13/11 – 14/11 | Quadro de tarefas, mensagem → tarefa, conversa direta |
 | 5. Testes e deploy | 14/11 – 15/11 | Testes, correções, publicação |
-| 6. Entrega final | 15/11 – 16/11 (até 06:00) | Links do projeto/domínio enviados na plataforma |
+| 6. Entrega final | 15/11 – 16/11 (até 06:00) | Link do repositório com a configuração local enviado na plataforma |
 
 ### 4.5 Dependências
 - Conta MongoDB Atlas (camada gratuita) criada e acessível por todos.
