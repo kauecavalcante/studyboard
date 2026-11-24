@@ -97,3 +97,4 @@ Os testes cobrem os critérios de aceitação do PRD (envio, tempo real, ordena�
 
 ## Autor
 Kauê Cavalcante Wanderley de Melo — [@kauecavalcante](https://github.com/kauecavalcante)
+Bernardo Torres - [@bernardots23](https://github.com/ bernardots23)
